@@ -17,4 +17,17 @@ class Lesson extends Model
     protected $fillable = [
         'title'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    /**
+     * Marks the lesson as watched.
+     */
+    public function watch(User $user)
+    {
+        return $this->users()->attach($user->id, ['watched' => true]);
+    }
 }
