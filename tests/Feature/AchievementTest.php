@@ -12,9 +12,11 @@ use App\Achiever\Achievements\TenLessonsWatched;
 use App\Achiever\Achievements\TwentyLessonsWatched;
 use App\Achiever\Achievements\FiftyLessonsWatched;
 use App\Achiever\Achievements\FirstLessonWatched;
+use App\Events\AchievementUnlocked;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AchievementTest extends TestCase
@@ -139,5 +141,19 @@ class AchievementTest extends TestCase
         $this->assertCount(5, $mehran->achievements);
 
         $this->assertTrue($mehran->achievements->contains('name', (new FiftyLessonsWatched)->name()));
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_an_achievement_unlocked()
+    {
+        Event::fake(AchievementUnlocked::class);
+
+        $mehran = User::factory()->create();
+
+        $this->addComment($mehran);
+
+        Event::assertDispatched(AchievementUnlocked::class, function ($event) {
+            return $event->achievement_name == (new FirstCommentWritten)->name();
+        });
     }
 }
