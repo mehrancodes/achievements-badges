@@ -8,6 +8,12 @@ class SyncLessonsAchievements
 {
     public function handle(LessonWatched $event)
     {
-        $event->user->syncAchievements();
+        $user = $event->user;
+
+        // We need to unlock the qualified user achievements first...
+        $user->syncAchievements();
+
+        // We sync the badges after the qualified achievements unlocked...
+        $user->syncBadges();
     }
 }

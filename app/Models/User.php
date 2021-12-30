@@ -74,4 +74,13 @@ class User extends Authenticatable
             ->using(UserAchievement::class)
             ->withTimestamps();
     }
+
+    /**
+     * The badge that a user has gained.
+     */
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badge')
+            ->withTimestamps();
+    }
 }

@@ -12,6 +12,10 @@ use App\Achiever\Achievements\TenLessonsWatched;
 use App\Achiever\Achievements\ThreeCommentsWritten;
 use App\Achiever\Achievements\TwentyCommentsWritten;
 use App\Achiever\Achievements\TwentyLessonsWatched;
+use App\Achiever\Badges\AdvancedBadge;
+use App\Achiever\Badges\BeginnerBadge;
+use App\Achiever\Badges\IntermediateBadge;
+use App\Achiever\Badges\MasterBadge;
 use Illuminate\Support\ServiceProvider;
 
 class AchieverServiceProvider extends ServiceProvider
@@ -29,6 +33,13 @@ class AchieverServiceProvider extends ServiceProvider
         FiftyLessonsWatched::class,
     ];
 
+    protected $badges = [
+        BeginnerBadge::class,
+        IntermediateBadge::class,
+        AdvancedBadge::class,
+        MasterBadge::class,
+    ];
+
     public function register()
     {
         // Here we create a new singleton that returns our achievements as a collection
@@ -36,6 +47,12 @@ class AchieverServiceProvider extends ServiceProvider
         $this->app->singleton('achievements', function () {
             return collect($this->achievements)->map(function ($achievement) {
                 return new $achievement;
+            });
+        });
+
+        $this->app->singleton('badges', function () {
+            return collect($this->badges)->map(function ($badge) {
+                return new $badge;
             });
         });
     }

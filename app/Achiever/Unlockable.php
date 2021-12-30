@@ -15,4 +15,16 @@ trait Unlockable
 
         $this->achievements()->sync($achievements);
     }
+
+    /**
+     * Unlock the new badges for the user.
+     */
+    public function syncBadges()
+    {
+        $badges = app('badges')
+            ->filter->qualifier($this)
+            ->map->modelKey();
+
+        $this->badges()->sync($badges);
+    }
 }

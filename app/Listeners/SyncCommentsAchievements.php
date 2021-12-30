@@ -10,6 +10,10 @@ class SyncCommentsAchievements
     {
         $user = $event->comment->user;
 
+        // We need to unlock the qualified user achievements first...
         $user->syncAchievements();
+
+        // We sync the badges after the qualified achievements unlocked...
+        $user->syncBadges();
     }
 }

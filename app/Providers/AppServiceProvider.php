@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Models\UserAchievement;
 use App\Observers\UserAchievementObserver;
+use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         UserAchievement::observe(UserAchievementObserver::class);
+
+        User::observe(UserObserver::class);
     }
 }
