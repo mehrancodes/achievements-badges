@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Events\LessonWatched;
 use App\Events\CommentWritten;
+use App\Listeners\SyncCommentsAchievements;
+use App\Listeners\SyncLessonsAchievements;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -16,10 +18,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         CommentWritten::class => [
-            //
+            SyncCommentsAchievements::class
         ],
         LessonWatched::class => [
-            //
+            SyncLessonsAchievements::class
         ],
     ];
 

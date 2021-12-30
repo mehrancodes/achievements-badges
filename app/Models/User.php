@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Comment;
+use App\Achiever\Unlockable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, Unlockable;
 
     /**
      * The attributes that are mass assignable.
@@ -63,5 +63,14 @@ class User extends Authenticatable
     public function watched()
     {
         return $this->belongsToMany(Lesson::class)->wherePivot('watched', true);
+    }
+
+    /**
+     * The achievements that a user has gained.
+     */
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class, 'user_achievement')
+            ->withTimestamps();
     }
 }
