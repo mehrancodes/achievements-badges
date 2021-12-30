@@ -28,11 +28,17 @@ class AchievementTest extends TestCase
     {
         $mehran = User::factory()->create();
 
+        $john = User::factory()->create();
+
         $this->addComment($mehran);
 
+        // Assert Mehran gets 1 achievement...
         $this->assertCount(1, $mehran->achievements);
 
         $this->assertSame($mehran->achievements->first()->name, (new FirstCommentWritten)->name());
+
+        // Assert John only has no achievement...
+        $this->assertCount(0, $john->achievements);
     }
 
     /** @test */
