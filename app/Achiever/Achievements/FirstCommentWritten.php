@@ -2,6 +2,7 @@
 
 namespace App\Achiever\Achievements;
 
+use App\Enums\AchievementsTypeEnum;
 use App\Models\User;
 
 class FirstCommentWritten extends AchievementType
@@ -14,6 +15,16 @@ class FirstCommentWritten extends AchievementType
     public function name(): string
     {
         return 'First Comment Written';
+    }
+
+    public function type(): AchievementsTypeEnum
+    {
+        return AchievementsTypeEnum::COMMENT();
+    }
+
+    public function order(): int
+    {
+        return 0;
     }
 }
 

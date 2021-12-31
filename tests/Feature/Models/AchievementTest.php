@@ -1,21 +1,20 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Models;
 
-use App\Achiever\Achievements\FirstCommentWritten;
-use App\Achiever\Achievements\ThreeCommentsWritten;
-use App\Achiever\Achievements\FiveCommentsWritten;
-use App\Achiever\Achievements\TenCommentsWritten;
-use App\Achiever\Achievements\TwentyCommentsWritten;
-use App\Achiever\Achievements\FiveLessonsWatched;
-use App\Achiever\Achievements\TenLessonsWatched;
-use App\Achiever\Achievements\TwentyLessonsWatched;
 use App\Achiever\Achievements\FiftyLessonsWatched;
+use App\Achiever\Achievements\FirstCommentWritten;
 use App\Achiever\Achievements\FirstLessonWatched;
+use App\Achiever\Achievements\FiveCommentsWritten;
+use App\Achiever\Achievements\FiveLessonsWatched;
+use App\Achiever\Achievements\TenCommentsWritten;
+use App\Achiever\Achievements\TenLessonsWatched;
+use App\Achiever\Achievements\ThreeCommentsWritten;
+use App\Achiever\Achievements\TwentyCommentsWritten;
+use App\Achiever\Achievements\TwentyFiveLessonsWatched;
 use App\Events\AchievementUnlocked;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
@@ -126,15 +125,15 @@ class AchievementTest extends TestCase
     }
 
     /** @test */
-    public function four_achievements_is_earned_when_user_watches_20_lessons()
+    public function four_achievements_is_earned_when_user_watches_25_lessons()
     {
         $mehran = User::factory()->create();
 
-        $this->watchLesson($mehran, 20);
+        $this->watchLesson($mehran, 25);
 
         $this->assertCount(4, $mehran->achievements);
 
-        $this->assertTrue($mehran->achievements->contains('name', (new TwentyLessonsWatched)->name()));
+        $this->assertTrue($mehran->achievements->contains('name', (new TwentyFiveLessonsWatched)->name()));
     }
 
     /** @test */

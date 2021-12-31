@@ -8,12 +8,22 @@ class IntermediateBadge extends BadgeType
 {
     public function qualifier(User $user): bool
     {
-        return $user->achievements()->count() >= 4;
+        return $user->achievements()->count() >= $this->requiredAchievements();
     }
 
     public function name(): string
     {
         return 'Intermediate';
+    }
+
+    public function order(): int
+    {
+        return 1;
+    }
+
+    public function requiredAchievements(): int
+    {
+        return 4;
     }
 }
 
