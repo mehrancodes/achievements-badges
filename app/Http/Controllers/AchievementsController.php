@@ -12,6 +12,11 @@ class AchievementsController extends Controller
 {
     public function index(User $user)
     {
+        return response()->json($this->prepareData($user));
+    }
+
+    protected function prepareData(User $user): array
+    {
         $unlockedAchievements = $user->achievements;
 
         $lockedBadges = $this->lockedBadges($user);
@@ -20,18 +25,16 @@ class AchievementsController extends Controller
 
         $nextBadge = $this->nextBadge($currentBadge);
 
-        $remaining = $this->remainingToUnlockNextBadge($unlockedAchievements, $nextBadge);
-
-        return response()->json([
+        return [
             'unlocked_achievements' => $unlockedAchievements->pluck('name')->toArray(),
-            'next_available_achievements' => $this->nextLockedLessons($unlockedAchievements),
+            'next_available_achievements' => $this->nextLockedAchievements($unlockedAchievements),
             'current_badge' => $currentBadge->name ?? null,
             'next_badge' => $nextBadge->name ?? null,
-            'remaining_to_unlock_next_badge' => $remaining,
-        ]);
+            'remaining_to_unlock_next_badge' => $this->remainingToUnlockNextBadge($unlockedAchievements, $nextBadge),
+        ];
     }
 
-    protected function nextLockedLessons(Collection $unlockedAchievements): array
+    protected function nextLockedAchievements(Collection $unlockedAchievements): array
     {
         $locked = $this->lockedAchievements($unlockedAchievements);
 
