@@ -108,7 +108,6 @@ class AchievementsTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'next_available_achievements' => [
-                    null,
                     (new FiftyLessonsWatched)->name(),
                 ]
             ]);
@@ -127,7 +126,6 @@ class AchievementsTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'next_available_achievements' => [
-                    null,
                     (new TwentyCommentsWritten)->name(),
                 ]
             ]);

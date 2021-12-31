@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AchievementsTypeEnum;
+use App\Models\Achievement;
 use App\Models\Badge;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -19,7 +20,7 @@ class AchievementsController extends Controller
 
         $nextBadge = $this->nextBadge($currentBadge);
 
-        $remaining = $this->remainingToUnlockNextBadge($nextBadge, $unlockedAchievements);
+        $remaining = $this->remainingToUnlockNextBadge($unlockedAchievements, $nextBadge);
 
         return response()->json([
             'unlocked_achievements' => $unlockedAchievements->pluck('name')->toArray(),
@@ -34,57 +35,57 @@ class AchievementsController extends Controller
     {
         $locked = $this->lockedAchievements($unlockedAchievements);
 
-        // return empty array if no locked achievement left...
-        if ($locked->isEmpty()) {
-            return [];
-        }
-
         $collect = collect([
-            $locked->first(function ($achievement) {
-                return $achievement->type->isEqual(AchievementsTypeEnum::LESSON());
-            }),
-            $locked->first(function ($achievement) {
-                return $achievement->type->isEqual(AchievementsTypeEnum::COMMENT());
-            })
+            $this->firstAchievementByType($locked, AchievementsTypeEnum::LESSON()),
+            $this->firstAchievementByType($locked, AchievementsTypeEnum::COMMENT()),
         ]);
 
-        $sorted = $collect->sortBy('order_column');
+        // Sort the collection by order_column and remove null items as well...
+        $sorted = $collect->sortBy('order_column')
+            ->filter();
 
-        return $sorted->pluck('name')->toArray();
+        return $sorted->pluck('name')
+            ->toArray();
+    }
+
+    protected function lockedAchievements(Collection $unlockedAchievements): Collection
+    {
+        return app('achievements')
+            ->filter(function ($achievement) use ($unlockedAchievements) {
+                $names = $unlockedAchievements->pluck('name')->toArray();
+
+                return !in_array($achievement->name(), $names);
+            })
+            ->map->getModel();
+    }
+
+    protected function firstAchievementByType(Collection $locked, AchievementsTypeEnum $type): ?Achievement
+    {
+        return $locked->first(function ($achievement) use ($type) {
+            return $achievement->type->isEqual($type);
+        });
     }
 
     protected function lockedBadges(User $user): Collection
     {
-        return $user->badges()->orderBy('order_column')->get();
+        return $user->badges()
+            ->orderBy('order_column')
+            ->get();
     }
 
     protected function nextBadge(Badge $currentBadge)
     {
-        $badge = app('badges')
+        return app('badges')
             ->map->getModel()
             ->firstWhere('order_column', '>', $currentBadge->order_column);
-
-        return $badge;
     }
 
-    protected function remainingToUnlockNextBadge($nextBadge, $unlockedAchievements)
+    protected function remainingToUnlockNextBadge($unlockedAchievements, $nextBadge = null): int
     {
         if (is_null($nextBadge)) {
             return 0;
         }
 
         return $nextBadge->required_achievements - $unlockedAchievements->count();
-    }
-
-    /**
-     * Return all achievements that are lock yet.
-     */
-    protected function lockedAchievements(Collection $unlockedAchievements)
-    {
-        return app('achievements')
-            ->filter(function ($achievement) use ($unlockedAchievements) {
-                return !in_array($achievement->name(), $unlockedAchievements->pluck('name')->toArray());
-            })
-            ->map->getModel();
     }
 }
