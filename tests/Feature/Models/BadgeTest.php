@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Models;
 
 use App\Achiever\Badges\AdvancedBadge;
 use App\Achiever\Badges\BeginnerBadge;
@@ -8,7 +8,6 @@ use App\Achiever\Badges\IntermediateBadge;
 use App\Events\BadgeUnlocked;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 

@@ -5,16 +5,16 @@ namespace App\Achiever\Achievements;
 use App\Enums\AchievementsTypeEnum;
 use App\Models\User;
 
-class FirstLessonWatched extends AchievementType
+class TwentyFiveLessonsWatched extends AchievementType
 {
     public function qualifier(User $user): bool
     {
-        return $user->watched()->count() >= 1;
+        return $user->watched()->count() >= 25;
     }
 
     public function name(): string
     {
-        return 'First Lesson Watched';
+        return '25 Lessons Watched';
     }
 
     public function type(): AchievementsTypeEnum
@@ -24,7 +24,7 @@ class FirstLessonWatched extends AchievementType
 
     public function order(): int
     {
-        return 5;
+        return 8;
     }
 }
 

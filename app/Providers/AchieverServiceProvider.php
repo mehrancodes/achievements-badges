@@ -11,7 +11,7 @@ use App\Achiever\Achievements\TenCommentsWritten;
 use App\Achiever\Achievements\TenLessonsWatched;
 use App\Achiever\Achievements\ThreeCommentsWritten;
 use App\Achiever\Achievements\TwentyCommentsWritten;
-use App\Achiever\Achievements\TwentyLessonsWatched;
+use App\Achiever\Achievements\TwentyFiveLessonsWatched;
 use App\Achiever\Badges\AdvancedBadge;
 use App\Achiever\Badges\BeginnerBadge;
 use App\Achiever\Badges\IntermediateBadge;
@@ -29,7 +29,7 @@ class AchieverServiceProvider extends ServiceProvider
         FirstLessonWatched::class,
         FiveLessonsWatched::class,
         TenLessonsWatched::class,
-        TwentyLessonsWatched::class,
+        TwentyFiveLessonsWatched::class,
         FiftyLessonsWatched::class,
     ];
 

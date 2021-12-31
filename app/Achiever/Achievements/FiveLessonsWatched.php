@@ -2,6 +2,7 @@
 
 namespace App\Achiever\Achievements;
 
+use App\Enums\AchievementsTypeEnum;
 use App\Models\User;
 
 class FiveLessonsWatched extends AchievementType
@@ -14,6 +15,16 @@ class FiveLessonsWatched extends AchievementType
     public function name(): string
     {
         return '5 Lessons Watched';
+    }
+
+    public function type(): AchievementsTypeEnum
+    {
+        return AchievementsTypeEnum::LESSON();
+    }
+
+    public function order(): int
+    {
+        return 6;
     }
 }
 

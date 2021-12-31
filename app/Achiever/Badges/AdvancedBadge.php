@@ -8,12 +8,22 @@ class AdvancedBadge extends BadgeType
 {
     public function qualifier(User $user): bool
     {
-        return $user->achievements()->count() >= 8;
+        return $user->achievements()->count() >= $this->requiredAchievements();
     }
 
     public function name(): string
     {
         return 'Advanced';
+    }
+
+    public function order(): int
+    {
+        return 2;
+    }
+
+    public function requiredAchievements(): int
+    {
+        return 8;
     }
 }
 
