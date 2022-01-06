@@ -16,6 +16,8 @@ use App\Achiever\Badges\AdvancedBadge;
 use App\Achiever\Badges\BeginnerBadge;
 use App\Achiever\Badges\IntermediateBadge;
 use App\Achiever\Badges\MasterBadge;
+use App\Achiever\Support\AchievementSupport;
+use App\Achiever\Support\BadgeSupport;
 use Illuminate\Support\ServiceProvider;
 
 class AchieverServiceProvider extends ServiceProvider
@@ -42,8 +44,10 @@ class AchieverServiceProvider extends ServiceProvider
 
     public function register()
     {
-        // Here we create a new singleton that returns our achievements as a collection
-        // It is usable when we want to get the achievements that are qualified by the user.
+        /**
+         * Here we create a new singleton that returns our achievements as a collection
+         * It is usable when we want to get the achievements that are qualified by the user.
+         */
         $this->app->singleton('achievements', function () {
             return collect($this->achievements)->map(function ($achievement) {
                 return new $achievement;
@@ -54,6 +58,17 @@ class AchieverServiceProvider extends ServiceProvider
             return collect($this->badges)->map(function ($badge) {
                 return new $badge;
             });
+        });
+
+        /**
+         * Support Facades for Achievements and Badges.
+         */
+        $this->app->bind('achievement_support', function () {
+            return new AchievementSupport;
+        });
+
+        $this->app->bind('badge_support', function () {
+            return new BadgeSupport;
         });
     }
 }
