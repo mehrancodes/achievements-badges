@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Achiever\Facades\Achievement;
 use App\Achiever\Facades\Badge;
+use App\Models\Badge as BadgeModel;
 use App\Models\User;
 
 class AchievementsController extends Controller
 {
-    public function index(User $user)
+    public function __invoke(User $user)
     {
-        list($achievements, $nextAchievements) = $this->achievementsData($user);
+        $achievements = $user->achievements;
 
-        list($currentBadge, $nextBadge) = $this->badgesData($user);
+        $nextAchievements = Achievement::nextAvailableAchievements($achievements);
+
+        $currentBadge = $this->getCurrentBadge($user);
+
+        $nextBadge = Badge::nextBadge($currentBadge);
 
         return response()->json([
             'unlocked_achievements' => Achievement::getAchievementsName($achievements),
@@ -23,23 +28,10 @@ class AchievementsController extends Controller
         ]);
     }
 
-    protected function badgesData(User $user): array
+    protected function getCurrentBadge(User $user): ?BadgeModel
     {
         $lockedBadges = Badge::lockedBadges($user);
 
-        $currentBadge = $lockedBadges->last();
-
-        $nextBadge = Badge::nextBadge($currentBadge);
-
-        return [$currentBadge, $nextBadge];
-    }
-
-    protected function achievementsData(User $user): array
-    {
-        $achievements = $user->achievements;
-
-        $nextAchievements = Achievement::nextAvailableAchievements($achievements);
-
-        return array($achievements, $nextAchievements);
+        return $lockedBadges->last();
     }
 }
